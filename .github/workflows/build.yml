@@ -153,11 +153,12 @@ jobs:
           set -euo pipefail
           test -s release-assets/Stillbow-debug.apk
           test -s release-assets/Stillbow-windows-x86_64.zip
-          printf 'Android debug APK and Windows x86_64 build.\n\nCommit: %s\nVerified build: %s\n\nAndroid is for testing; a different build may require uninstalling the previous APK.\n' "$BUILD_SHA" "$BUILD_URL" > notes.md
+          printf '안드로이드 테스트용 APK와 Windows PC용 게임입니다.\n\n소스 버전: %s\n검증된 빌드: %s\n\nAPK는 테스트 설치용입니다. 다른 빌드를 설치할 때는 이전 앱을 먼저 지워야 할 수 있습니다.\n' "$BUILD_SHA" "$BUILD_URL" > notes.md
           if gh release view main-build >/dev/null 2>&1; then
             gh api --method PATCH "repos/$GH_REPO/git/refs/tags/main-build" -f sha="$BUILD_SHA" -F force=true
             gh release upload main-build release-assets/Stillbow-debug.apk release-assets/Stillbow-windows-x86_64.zip --clobber
-            gh release edit main-build --title 'Stillbow — latest test build' --notes-file notes.md --latest
+            gh release edit main-build --title '스틸보우 — 최신 테스트 빌드' --notes-file notes.md --latest
           else
-            gh release create main-build release-assets/Stillbow-debug.apk release-assets/Stillbow-windows-x86_64.zip --target "$BUILD_SHA" --title 'Stillbow — latest test build' --notes-file notes.md --latest
+            gh release create main-build release-assets/Stillbow-debug.apk release-assets/Stillbow-windows-x86_64.zip --target "$BUILD_SHA" --title '스틸보우 — 최신 테스트 빌드' --notes-file notes.md --latest
           fi
+

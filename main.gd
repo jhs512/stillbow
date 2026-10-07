@@ -28,10 +28,12 @@ var stick := Vector2.ZERO
 var moving := false
 var aim := Vector2.UP
 var paused := false
-var font := ThemeDB.fallback_font
+var font := FontVariation.new()
 var capture_frames := 0
 
 func _ready() -> void:
+	font.base_font = preload("res://assets/fonts/NotoSansKR.ttf")
+	font.variation_opentype = {"wght": 500.0}
 	archer_texture = AtlasTexture.new()
 	archer_texture.atlas = ARCHER_IMAGE
 	# Crop alpha padding without modifying the source PNG. The painted bow points down.
@@ -217,15 +219,15 @@ func make_style(color: Color) -> StyleBoxFlat:
 
 func _draw() -> void:
 	draw_rect(Rect2(0,0,540,900), Color("0b1220"))
-	label_at(Vector2(30,38), "STILLBOW", 25, TEAL)
-	label_at(Vector2(30,61), "GEOMETRY TRIALS  /  PROTOTYPE 01", 12, Color("8193af"))
+	label_at(Vector2(30,38), "스틸보우", 25, TEAL)
+	label_at(Vector2(30,61), "궁수의 도전  /  시제품 01", 12, Color("8193af"))
 	panel(Rect2(30,82,480,66), Color("172337"))
-	label_at(Vector2(47,106), "VITALITY", 11, Color("8193af"))
+	label_at(Vector2(47,106), "체력", 11, Color("8193af"))
 	for i in range(6):
 		draw_circle(Vector2(55+i*23,125), 7, TEAL if i < hp else Color("30425a"))
-	label_at(Vector2(225,109), "WAVE", 11, Color("8193af"))
+	label_at(Vector2(225,109), "웨이브", 11, Color("8193af"))
 	label_at(Vector2(225,133), "%02d / 05" % wave, 21)
-	label_at(Vector2(349,109), "DEFEATED", 11, Color("8193af"))
+	label_at(Vector2(349,109), "처치", 11, Color("8193af"))
 	label_at(Vector2(349,133), "%02d" % kills, 21, GOLD)
 	label_at(Vector2(474,122), "II", 22, TEAL)
 	panel(ARENA.grow(4), Color("30435a"))
@@ -264,9 +266,9 @@ func _draw() -> void:
 		draw_texture_rect(archer_texture, Rect2(-art_size / 2, art_size), false)
 		draw_set_transform(Vector2.ZERO)
 	panel(Rect2(30,770,480,100), Color("172337"))
-	label_at(Vector2(49,801), "MOVE TO DODGE" if moving else "STILL. AIM. RELEASE.", 19, TEAL)
-	label_at(Vector2(49,826), "WASD / arrows   or   drag anywhere", 15)
-	label_at(Vector2(49,850), "Stop to auto-fire   |   R restart   |   P pause", 13, Color("8193af"))
+	label_at(Vector2(49,801), "이동하며 공격을 피하세요" if moving else "멈추면 자동으로 활을 쏩니다", 19, TEAL)
+	label_at(Vector2(49,826), "WASD / 방향키 또는 화면 드래그로 이동", 15)
+	label_at(Vector2(49,850), "R 다시 시작  |  P 일시 정지", 13, Color("8193af"))
 	if drag:
 		draw_circle(origin,55,Color(0.4,1,0.8,0.1))
 		draw_arc(origin,55,0,TAU,40,Color(0.4,1,0.8,0.4),2)
@@ -274,18 +276,18 @@ func _draw() -> void:
 	if state != "play" or paused:
 		draw_rect(Rect2(0,158,540,600),Color(0.02,0.04,0.08,0.88))
 		if state == "upgrade":
-			label_at(Vector2(62,320), "ROOM CLEARED", 30, TEAL)
-			label_at(Vector2(62,355), "Choose your edge for the next wave.", 17)
-			var titles := ["1   POWER ARROW", "2   QUICK DRAW", "3   SECOND WIND"]
-			var notes := ["+1 damage per arrow", "20% shorter firing cooldown", "Restore 3 health / +20 movement speed"]
+			label_at(Vector2(62,320), "웨이브 완료!", 30, TEAL)
+			label_at(Vector2(62,355), "다음 전투에 사용할 강화를 고르세요", 17)
+			var titles := ["1   강력한 화살", "2   빠른 사격", "3   회복의 바람"]
+			var notes := ["화살 피해량 +1", "사격 대기 시간 20% 감소", "체력 3 회복 / 이동 속도 +20"]
 			for i in range(3):
 				panel(Rect2(62,405+i*86,416,72),Color("22364a"))
 				label_at(Vector2(80,434+i*86),titles[i],19,GOLD)
 				label_at(Vector2(80,460+i*86),notes[i],14)
 		else:
-			var title := "PAUSED" if paused and state == "play" else ("TRIAL COMPLETE" if state == "win" else "ONE MORE SHOT")
+			var title := "일시 정지" if paused and state == "play" else ("모든 도전 완료!" if state == "win" else "다시 도전해 보세요")
 			label_at(Vector2(83,380),title,30,TEAL)
-			label_at(Vector2(83,421),"Press P to resume" if paused and state == "play" else "%d defeated  /  wave %d" % [kills,wave],19)
+			label_at(Vector2(83,421),"P를 눌러 계속하기" if paused and state == "play" else "%d마리 처치  /  %d웨이브" % [kills,wave],19)
 			if state != "play":
 				panel(Rect2(110,510,320,64),TEAL)
-				label_at(Vector2(173,550),"PLAY AGAIN  [R]",20,Color("102b32"))
+				label_at(Vector2(173,550),"다시 시작  [R]",20,Color("102b32"))
