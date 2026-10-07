@@ -1,7 +1,7 @@
 config_version=5
 
 [application]
-config/name="Stillbow — Geometry Trials"
+config/name="스틸보우 — 궁수의 도전"
 config/icon="res://icon.svg"
 run/main_scene="res://main.tscn"
 
