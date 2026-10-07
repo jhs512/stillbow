@@ -95,7 +95,7 @@ Godot 4.5.1과 동일 버전의 export templates를 사용해.
 Android는 테스트용 debug APK, Windows는 게임 데이터를 포함한 실행 파일로 만들어.
 빌드 결과는 Actions 아티팩트로 업로드하고 키와 캐시는 커밋하지 마.
 실제 push 후 두 빌드 결과를 확인하고 실패하면 수정해.</blockquote><button type="button">프롬프트 복사</button></div>
-      <p>실제 첫 실행에서는 Windows가 성공했지만 Android SDK 설치가 실패했습니다. 설치 도구가 요청한 오래된 <code>tools</code> 패키지를 <code>platform-tools</code>로 바꾸고 다시 푸시했습니다. <strong>워크플로 파일 작성 후 실제 결과를 확인하는 단계</strong>까지 포함하는 것이 핵심입니다.</p>
+      <p>실제 빌드에서 Android SDK의 오래된 <code>tools</code> 패키지 요청과 모바일 텍스처 가져오기 설정 누락을 발견했습니다. 패키지를 <code>platform-tools</code>로 바꾸고 ETC2/ASTC 가져오기를 켠 뒤 다시 푸시했습니다. <strong>워크플로 파일 작성 후 실제 결과를 확인하는 단계</strong>까지 포함하는 것이 핵심입니다.</p>
       <p><strong>다운로드:</strong> 아래 Actions에서 성공한 실행을 열고 Artifacts의 <code>Stillbow-android-debug</code> 또는 <code>Stillbow-windows-x86_64</code>를 받습니다. GitHub 로그인 필요, 보관 기간은 14일입니다.</p>
       <div class="check"><strong>APK의 범위</strong><br>디버그 APK는 테스트 설치용입니다. Play Store 제출용 배포 서명이 아닙니다. 빌드마다 임시 키가 달라 이전 APK를 제거해야 새 APK를 설치할 수 있는 경우가 있습니다.</div>
     </div>
