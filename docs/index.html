@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Stillbow 만들기 — 프롬프트로 따라가는 게임 제작</title>
+  <meta name="description" content="도형 시제품부터 이미지 적용과 Android·Windows 자동 빌드까지. Stillbow를 만든 핵심 프롬프트와 단계별 확인 방법.">
+  <style>
+    :root{--ink:#172d32;--muted:#516970;--line:#d7e3df;--paper:#f6f8f3;--accent:#136958}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.75}a{color:var(--accent);text-underline-offset:4px}header,main,footer{max-width:1080px;margin:auto;padding:0 28px}header{display:flex;justify-content:space-between;gap:16px;padding-top:28px;padding-bottom:24px;border-bottom:1px solid var(--line)}.brand{font-weight:850;letter-spacing:2px;text-decoration:none}.eyebrow{font-size:12px;font-weight:750;letter-spacing:2px;color:var(--accent)}h1{font-size:clamp(34px,5.5vw,62px);line-height:1.22;letter-spacing:-2px;margin:15px 0 22px}h2{font-size:28px;line-height:1.4;letter-spacing:-.7px;margin:0 0 15px}h3{font-size:20px;margin:0 0 8px}p{margin:0 0 16px}.lead{font-size:19px;color:var(--muted);max-width:650px}.hero{padding:64px 0 36px}.pill{display:inline-block;padding:5px 12px;border:1px solid var(--line);border-radius:30px;font-size:13px;margin:0 6px 8px 0}.route{display:flex;flex-wrap:wrap;gap:8px;padding:16px 0 36px}.route a{background:white;border:1px solid var(--line);padding:8px 13px;border-radius:7px;text-decoration:none;font-size:14px}.intro{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:54px}.box{background:white;border:1px solid var(--line);border-radius:14px;padding:24px}.box ul{padding-left:20px;margin:10px 0 0}.gallery{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:54px}.screen{background:#0b1220;border-radius:12px;text-align:center;padding:18px}.screen img{height:400px;max-width:100%;object-fit:contain;display:block;margin:auto}.screen figcaption{color:#d5e5e1;font-size:14px;padding-top:12px}figure{margin:0}.step{border-top:1px solid var(--line);padding:38px 0;scroll-margin-top:20px}.step-head{display:flex;gap:18px;align-items:baseline}.number{font-size:16px;font-weight:800;color:var(--accent);min-width:36px}.step-content{margin-left:54px}.tag{font-size:12px;font-weight:700;color:var(--accent);display:block;margin-bottom:8px}.prompt{background:#112c32;color:#eaf5ed;border-radius:12px;padding:24px;margin:20px 0;position:relative}.prompt blockquote{margin:0;white-space:pre-wrap;font-size:16px;line-height:1.85}.prompt button{display:block;margin:18px 0 0 auto;padding:7px 13px;background:#c6eddf;color:#123a31;border:0;border-radius:6px;font:inherit;font-size:13px;cursor:pointer}.prompt button:focus-visible{outline:3px solid #ffd373;outline-offset:4px}.check{border-left:3px solid #338b73;padding:0 0 0 16px;margin:20px 0;color:var(--muted)}code{background:#e8eeea;padding:2px 6px;border-radius:4px;font-size:.9em}pre{background:#e8eeea;padding:18px;border-radius:9px;overflow:auto;line-height:1.6}pre code{padding:0}.actions{display:flex;flex-wrap:wrap;gap:12px;margin:24px 0}.button{display:inline-block;background:var(--accent);color:white;text-decoration:none;border-radius:7px;padding:10px 18px}.button.secondary{background:white;color:var(--accent);border:1px solid var(--line)}footer{border-top:1px solid var(--line);padding-top:24px;padding-bottom:38px;color:var(--muted);font-size:13px}.small{font-size:14px;color:var(--muted)}@media(max-width:640px){header,main,footer{padding-left:20px;padding-right:20px}.hero{padding-top:38px}.intro,.gallery{grid-template-columns:1fr}.screen img{height:360px}.step-content{margin-left:0}.step-head{gap:10px}.prompt{padding:20px}header{font-size:13px}h1{letter-spacing:-1px}}
+  </style>
+</head>
+<body>
+<header><a class="brand" href="#">STILLBOW / BUILD NOTES</a><a href="https://github.com/jhs512/stillbow">GitHub 소스 ↗</a></header>
+<main>
+  <section class="hero">
+    <span class="eyebrow">학생을 위한 제작 기록</span>
+    <h1>프롬프트에서<br>플레이 가능한 게임까지.</h1>
+    <p class="lead">Stillbow는 움직이면 피하고, 멈추면 활을 쏘는 작은 궁수 게임입니다. 어떤 요청이 다음 결과로 이어졌는지, 핵심 단계만 따라가 봅니다.</p>
+    <div><span class="pill">Godot 4.5.1</span><span class="pill">2D · 세로 화면</span><span class="pill">Android + Windows</span><span class="pill">로그인 없이 플레이</span></div>
+  </section>
+  <nav class="route" aria-label="제작 단계"><a href="#prototype">01 시제품</a><a href="#run">02 실행</a><a href="#art">03 이미지</a><a href="#apply">04 적용</a><a href="#improve">05 개선</a><a href="#build">06 자동 빌드</a></nav>
+  <div class="intro">
+    <section class="box"><h3>시작 전에</h3><ul><li>Godot 4.5.1과 로컬 파일을 수정·실행할 수 있는 AI 코딩 도구를 준비합니다.</li><li>빈 프로젝트 폴더를 열고 아래 프롬프트를 차례로 요청합니다.</li><li>각 단계의 결과를 확인한 뒤 다음 단계로 넘어갑니다.</li><li>자동 빌드까지 따라 하려면 GitHub 계정과 GitHub CLI 로그인이 필요합니다.</li></ul></section>
+    <section class="box"><h3>프롬프트를 읽는 방법</h3><p>짧은 인용문은 실제 사용자가 요청한 문장입니다. 처음 요구사항처럼 원문 전체를 보존하지 않은 부분은 <strong>따라 하기용 프롬프트</strong>로 다시 정리했습니다.</p><p class="small">원본 대화 전체가 아닌 핵심 흐름입니다. 계정 이름·로컬 경로는 자신의 환경에 맞게 바꾸세요. AI가 만든 결과는 직접 실행해서 확인해야 합니다.</p></section>
+  </div>
+  <div class="gallery">
+    <figure class="screen"><img src="images/gameplay.png" width="540" height="900" alt="도형만으로 만든 초기 Stillbow 플레이 화면"><figcaption>처음: 도형으로 전투 규칙부터 확인</figcaption></figure>
+    <figure class="screen"><img src="images/gameplay-art-v1.png" width="540" height="900" alt="생성한 궁수와 석조 배경을 적용한 Stillbow 플레이 화면"><figcaption>다음: 이미지 적용 후 실제 Godot 실행</figcaption></figure>
+  </div>
+  <section class="step" id="prototype">
+    <div class="step-head"><span class="number">01</span><h2>작은 시제품으로 규칙부터 만들기</h2></div>
+    <div class="step-content"><p>처음부터 그래픽과 계정 기능을 만들지 않고, 이동·회피·정지 사격이 재미있게 연결되는지 확인했습니다. <a href="https://play.google.com/store/apps/details?id=com.habby.archero">Archero 공식 스토어</a>의 웨이브·강화·재시작 구조를 참고하되, 원작 자산은 복제하지 않았습니다.</p>
+      <div class="prompt"><span class="tag">따라 하기용 프롬프트 · 초기 요구사항 정리</span><blockquote>Godot 4.5.1로 궁수 게임 시제품을 만들어줘.
+Archero를 참고하되 캐릭터와 배경은 처음에는 스프라이트 없이 도형으로 표현해.
+로그인이나 회원가입 없이 실행하면 바로 플레이하게 해.
+이동 중에는 회피하고 멈추면 가까운 적에게 자동 사격하도록 해.
+적의 공격, 체력, 5개 웨이브, 웨이브 사이 강화 선택, 사망 후 재시작을 구현해.
+WASD/방향키와 화면 드래그를 지원하고 실제 실행해서 검증해.</blockquote><button type="button">프롬프트 복사</button></div>
+      <p><strong>결과:</strong> <code>project.godot</code>, <code>main.tscn</code>, <code>main.gd</code>와 기본 전투가 만들어졌습니다.</p>
+      <div class="check"><strong>확인할 것</strong><br>움직일 때는 사격하지 않는가? 멈추면 쏘는가? 적에게 맞으면 체력이 줄고, 죽으면 다시 시작할 수 있는가?</div>
+    </div>
+  </section>
+  <section class="step" id="run">
+    <div class="step-head"><span class="number">02</span><h2>설명이 아니라 실행 화면 확인하기</h2></div>
+    <div class="step-content"><p>프로젝트 파일이 생겼다는 것과 게임이 실행된다는 것은 별도로 확인했습니다.</p>
+      <div class="prompt"><span class="tag">따라 하기용 프롬프트 · 실행 요청 정리</span><blockquote>완성된 시제품을 지금 데스크톱 게임 창으로 실행해줘.
+실제 실행 여부를 확인하고 플레이 화면을 보여줘.</blockquote><button type="button">프롬프트 복사</button></div>
+      <p><strong>직접 실행:</strong> Godot에서 <code>project.godot</code>을 가져오고 F6을 누릅니다. WASD/방향키 또는 드래그로 이동하고, R로 재시작하며 P로 일시 정지합니다.</p>
+      <div class="check"><strong>확인할 것</strong><br>스크린샷뿐 아니라 실제 게임 창에서 움직여 봅니다. 실행하지 못했다면 원인과 필요한 환경부터 해결합니다.</div>
+    </div>
+  </section>
+  <section class="step" id="art">
+    <div class="step-head"><span class="number">03</span><h2>게임에 맞는 이미지 만들기</h2></div>
+    <div class="step-content"><p>도형으로 전투가 동작한 다음, 시각 자산을 요청했습니다.</p>
+      <div class="prompt"><span class="tag">실제 사용자 요청</span><blockquote>캐릭터와 배경 이미지 만들어줘</blockquote><button type="button">프롬프트 복사</button></div>
+      <p>AI는 게임 화면에 맞춰 <strong>청록 후드·금색 활의 궁수 투명 PNG</strong>와 <strong>빈 중앙을 가진 남색 석조 아레나</strong>를 각각 생성했습니다. 배경에는 UI·문자·적을 넣지 않아 전투 요소를 따로 그릴 수 있게 했습니다.</p>
+      <div class="prompt"><span class="tag">따라 하기용 프롬프트 · 이미지 조건을 구체화</span><blockquote>위에서 내려다보는 궁수 게임용 이미지를 두 장 만들어줘.
+1. 청록색 후드와 금색 활을 든 독창적인 궁수. 작은 화면에서도 구분되는 형태, 배경은 실제 투명 PNG.
+2. 남색 석조 전투 아레나. 중앙은 비우고 장식은 경계에 두어 적과 탄환이 잘 보이게 해.
+배경에 캐릭터, UI, 문자나 로고를 넣지 마. 두 이미지를 프로젝트에 저장하고 보여줘.</blockquote><button type="button">프롬프트 복사</button></div>
+      <p><strong>결과:</strong> <code>assets/images/archer-v1.png</code>, <code>assets/images/arena-v1.png</code>. <a href="https://github.com/jhs512/stillbow/blob/main/assets/images/README.md">실제 이미지 생성 프롬프트</a>도 저장했습니다.</p>
+      <div class="check"><strong>확인할 것</strong><br>캐릭터 배경에 알파 투명도가 있는가? 배경 중앙이 차분한가? 작은 크기로 봐도 활과 캐릭터가 구분되는가?</div>
+    </div>
+  </section>
+  <section class="step" id="apply">
+    <div class="step-head"><span class="number">04</span><h2>이미지를 실제 게임에 연결하기</h2></div>
+    <div class="step-content">
+      <div class="prompt"><span class="tag">실제 사용자 요청</span><blockquote>적용해</blockquote><button type="button">프롬프트 복사</button></div>
+      <p>이전 단계에서 만든 두 이미지를 사용하는 요청입니다. 플레이어 도형을 궁수로, 아레나 바닥을 배경으로 바꾸고, 적·탄환·UI와 전투 규칙은 유지했습니다.</p>
+      <div class="prompt"><span class="tag">따라 하기용 프롬프트 · 별도 대화에서도 쓸 수 있게</span><blockquote>assets/images/archer-v1.png와 arena-v1.png를 현재 Godot 게임에 적용해줘.
+궁수의 투명 여백을 제외해 적절한 크기로 표시하고 조준 방향에 맞춰 회전시켜.
+기존 전투 기능과 UI를 유지하고 실제 실행 화면을 캡처해줘.</blockquote><button type="button">프롬프트 복사</button></div>
+      <div class="check"><strong>확인할 것</strong><br>이미지 파일을 저장만 한 것이 아니라 게임에서 불러오는가? 조준 방향과 활 방향이 맞는가? 기존 기능이 계속 동작하는가?</div>
+    </div>
+  </section>
+  <section class="step" id="improve">
+    <div class="step-head"><span class="number">05</span><h2>화면을 보고 고치고, 다시 보기</h2></div>
+    <div class="step-content">
+      <div class="prompt"><span class="tag">실제 사용자 요청</span><blockquote>니가 보고 계속 인간이 보기에 괜찮을 정도로 루프 돌면서 개선해</blockquote><button type="button">프롬프트 복사</button></div>
+      <p>실행 → 캡처 → 화면 검토 → 수정 → 재실행을 반복했습니다. 첫 적용 화면에서 궁수가 작고 거칠게 보였으며 배경 원형 무늬가 가로로 늘어나 있었습니다.</p>
+      <div class="box"><h3>실제 수정한 부분</h3><ul><li>희미한 투명 픽셀을 제외하고 궁수를 높이 76픽셀로 표시했습니다.</li><li>밉맵을 켜서 축소할 때 거친 세부를 줄였습니다.</li><li>바닥 이미지는 원래 비율로 잘라 배치하고 위·아래 벽을 따로 표시했습니다.</li><li>조준 방향으로 부드럽게 회전하고, 이동 경계를 안쪽으로 옮겨 벽에서 잘리지 않게 했습니다.</li><li>배경을 조금 어둡게 해 밝은 적과 탄환이 구분되도록 했습니다.</li></ul></div>
+      <div class="check"><strong>멈출 기준</strong><br>캐릭터가 잘리지 않고 배경이 왜곡되지 않으며, UI를 읽을 수 있고 적·탄환·플레이어를 구분할 수 있는가? 전투 동작 검사도 통과했는가?</div>
+      <p class="small">아트는 한 방향의 정적 이미지입니다. 걷기 애니메이션과 방향별 그림은 아직 없습니다. 실제 Android 기기 플레이 검증도 별도 과제입니다.</p>
+    </div>
+  </section>
+  <section class="step" id="build">
+    <div class="step-head"><span class="number">06</span><h2>main에 푸시하면 빌드되게 만들기</h2></div>
+    <div class="step-content">
+      <div class="prompt"><span class="tag">실제 사용자 요청</span><blockquote>리포지터리 만들고 main 푸시 때 마다 안드로이드/PC 빌드 되도록</blockquote><button type="button">프롬프트 복사</button></div>
+      <p><code>export_presets.cfg</code>에 Android와 Windows 내보내기를 설정하고, GitHub Actions에서 Godot 4.5.1과 동일 버전 템플릿을 설치해 빌드하도록 구성했습니다. PC 대상은 이 프로젝트 실행 환경인 <strong>Windows x86_64</strong>입니다.</p>
+      <div class="prompt"><span class="tag">따라 하기용 프롬프트 · 빌드 조건을 명시</span><blockquote>이 프로젝트의 GitHub 저장소를 만들고 main 푸시마다 Android APK와 Windows x86_64 ZIP을 빌드하도록 GitHub Actions를 구성해줘.
+Godot 4.5.1과 동일 버전의 export templates를 사용해.
+리소스 가져오기와 기존 동작 검사를 먼저 실행해.
+Android는 테스트용 debug APK, Windows는 게임 데이터를 포함한 실행 파일로 만들어.
+빌드 결과는 Actions 아티팩트로 업로드하고 키와 캐시는 커밋하지 마.
+실제 push 후 두 빌드 결과를 확인하고 실패하면 수정해.</blockquote><button type="button">프롬프트 복사</button></div>
+      <p>실제 첫 실행에서는 Windows가 성공했지만 Android SDK 설치가 실패했습니다. 설치 도구가 요청한 오래된 <code>tools</code> 패키지를 <code>platform-tools</code>로 바꾸고 다시 푸시했습니다. <strong>워크플로 파일 작성 후 실제 결과를 확인하는 단계</strong>까지 포함하는 것이 핵심입니다.</p>
+      <p><strong>다운로드:</strong> 아래 Actions에서 성공한 실행을 열고 Artifacts의 <code>Stillbow-android-debug</code> 또는 <code>Stillbow-windows-x86_64</code>를 받습니다. GitHub 로그인 필요, 보관 기간은 14일입니다.</p>
+      <div class="check"><strong>APK의 범위</strong><br>디버그 APK는 테스트 설치용입니다. Play Store 제출용 배포 서명이 아닙니다. 빌드마다 임시 키가 달라 이전 APK를 제거해야 새 APK를 설치할 수 있는 경우가 있습니다.</div>
+    </div>
+  </section>
+  <section class="step"><h2>직접 이어서 해보기</h2><p>소스를 내려받아 실행하거나, 위 프롬프트로 새 프로젝트를 만들어 비교해 보세요. GitHub CLI가 설치되어 있다면 다음 명령으로 소스를 받을 수 있습니다.</p><pre><code>gh repo clone jhs512/stillbow
+cd stillbow</code></pre><p>Godot에서 <code>project.godot</code>을 열고 F6을 누릅니다. 다음 과제로는 캐릭터 걷기 애니메이션, 적 이미지, Android 기기 테스트 중 하나를 골라 작게 확장해 보세요.</p><div class="actions"><a class="button" href="https://github.com/jhs512/stillbow">소스 코드 보기 ↗</a><a class="button secondary" href="https://github.com/jhs512/stillbow/actions/workflows/build.yml">빌드와 다운로드 ↗</a></div></section>
+</main>
+<footer>Stillbow 제작 기록 · 실제 프롬프트 흐름과 실행 결과를 바탕으로 정리했습니다.<br>참고: <a href="https://docs.godotengine.org/en/4.5/tutorials/export/exporting_for_android.html">Godot Android 내보내기</a> · <a href="https://docs.godotengine.org/en/4.5/tutorials/editor/command_line_tutorial.html">Godot 명령줄 사용</a></footer>
+<script>
+document.querySelectorAll('.prompt button').forEach(button=>button.addEventListener('click',async()=>{
+  const text=button.parentElement.querySelector('blockquote').textContent;
+  try{await navigator.clipboard.writeText(text);button.textContent='복사 완료';setTimeout(()=>button.textContent='프롬프트 복사',1800)}
+  catch{button.textContent='문장을 선택해 복사해주세요'}
+}));
+</script>
+</body>
+</html>

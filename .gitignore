@@ -10,3 +10,4 @@ android/build/
 *.apk
 *.aab
 *.pck
+_site/
