@@ -28,12 +28,10 @@ var stick := Vector2.ZERO
 var moving := false
 var aim := Vector2.UP
 var paused := false
-var font := FontVariation.new()
+var font := preload("res://assets/fonts/NotoSansKR-Regular.otf")
 var capture_frames := 0
 
 func _ready() -> void:
-	font.base_font = preload("res://assets/fonts/NotoSansKR.ttf")
-	font.variation_opentype = {"wght": 500.0}
 	archer_texture = AtlasTexture.new()
 	archer_texture.atlas = ARCHER_IMAGE
 	# Crop alpha padding without modifying the source PNG. The painted bow points down.
