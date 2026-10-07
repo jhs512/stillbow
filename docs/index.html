@@ -19,7 +19,7 @@
     <p class="lead">엔진 버전도, 이미지 파일명도 정하지 않았습니다. 만들고 싶은 것을 말하고, 결과를 본 뒤 다음 말을 건넸습니다. 이 궁수 게임이 만들어진 대화의 흐름입니다.</p>
     <div><span class="pill">평소 말하듯 요청하기</span><span class="pill">만들어진 결과 보기</span><span class="pill">보고 다시 부탁하기</span></div>
   </section>
-  <nav class="route" aria-label="제작 단계"><a href="#prototype">01 만들어줘</a><a href="#run">02 실행해줘</a><a href="#art">03 이미지 만들어줘</a><a href="#apply">04 적용해</a><a href="#improve">05 보고 개선해</a><a href="#build">06 자동으로 빌드해</a></nav>
+  <nav class="route" aria-label="제작 단계"><a href="#prototype">01 만들어줘</a><a href="#run">02 실행해줘</a><a href="#art">03 이미지 만들어줘</a><a href="#apply">04 적용해</a><a href="#improve">05 보고 개선해</a><a href="#build">06 자동으로 빌드해</a><a href="#release">07 다운로드 확인</a></nav>
   <div class="intro">
     <section class="box"><h3>어떻게 시작하면 될까요?</h3><p>AI 코딩 도구에서 작업할 폴더를 열고, 만들고 싶은 게임을 자기 말로 이야기해 보세요. 무엇부터 만들지, 무엇은 빼고 싶은지 정도면 시작할 수 있습니다.</p><p class="small">AI가 파일을 만들고 게임을 실행할 수 있는 환경은 필요합니다. 설치나 로그인 단계가 나오면 안내에 따라 직접 진행하면 됩니다.</p></section>
     <section class="box"><h3>이 페이지에서 볼 것</h3><p>사용자가 한 말과 그 뒤에 나온 결과를 나란히 보세요. “적용해”처럼 짧은 말도 앞서 만든 결과를 함께 보고 있는 대화에서는 뜻이 이어집니다.</p><p class="small">사용자가 실제로 한 말을 담았습니다. AI가 내부에서 정한 기술 사항을 사용자가 말한 것처럼 적지 않았습니다.</p></section>
@@ -80,6 +80,17 @@
       <div class="check"><strong>따라 해본다면</strong><br>GitHub를 처음 쓴다면 “게임을 다른 사람도 받아서 해볼 수 있게 해줘”라고 목적부터 말해 보세요. 필요한 계정과 다음 절차를 안내받을 수 있습니다.</div>
     </div>
   </section>
+  <section class="step" id="release">
+    <div class="step-head"><span class="number">07</span><h2>받으려고 보니 파일이 없었습니다</h2></div>
+    <div class="step-content">
+      <div class="prompt"><span class="tag">실제로 한 말</span><blockquote>엥? 리포지터리 릴리즈에 apk 없는데?</blockquote><button type="button">이 문장 복사</button></div>
+      <p><strong>무슨 일이 있었나</strong><br>빌드는 성공했지만 설치 파일은 작업 기록 안에만 저장되어 있었습니다. 사람들이 쉽게 찾을 수 있는 Releases에는 APK가 없었습니다. 사용자가 직접 다운로드하려고 확인하면서 이 빠진 부분을 발견했습니다.</p>
+      <p><strong>그 뒤에 나온 것</strong><br>AI가 성공한 빌드에서 APK와 PC 파일을 받아 Releases에 올렸습니다. 이후에도 게임을 수정해 올리면, 두 빌드가 성공한 뒤 최신 다운로드 파일이 자동으로 바뀌도록 연결했습니다. 안내 페이지의 다운로드 버튼도 이곳을 가리키게 고쳤습니다.</p>
+      <div class="actions"><a class="button" href="https://github.com/jhs512/stillbow/releases/download/main-build/Stillbow-debug.apk">안드로이드 APK 받기</a><a class="button secondary" href="https://github.com/jhs512/stillbow/releases/download/main-build/Stillbow-windows-x86_64.zip">Windows PC 파일 받기</a></div>
+      <p class="small">APK는 테스트 설치용입니다. 다른 빌드로 바꿀 때는 이전 앱을 먼저 지워야 할 수 있습니다. PC 파일은 압축을 풀고 게임 실행 파일을 열면 됩니다.</p>
+      <div class="check"><strong>따라 해본다면</strong><br>“완료됐어요”라는 답을 받은 뒤, 다른 사람이 실제로 할 행동을 직접 해보세요. 링크를 열고 파일을 받는 마지막 단계까지 확인하면 빠진 부분을 찾을 수 있습니다.</div>
+    </div>
+  </section>
   <section class="step"><h2>여러분의 말로 시작해 보세요</h2><p>처음부터 완성된 기획서를 쓰지 않았습니다. 만들고 싶은 것을 말하고, 실행한 결과를 본 뒤, 필요한 것을 하나씩 더 요청했습니다. 같은 말을 그대로 복사해도 결과는 달라질 수 있으니 직접 보고 다음 말을 이어가세요.</p><p>이 게임을 먼저 해보고 싶다면 아래 다운로드 페이지의 Assets에서 APK나 PC 파일을 바로 받을 수 있습니다. 안드로이드 파일은 테스트 설치용이며, 실제 휴대폰에서의 플레이 확인은 아직 별도로 필요합니다.</p><div class="actions"><a class="button" href="https://github.com/jhs512/stillbow/releases/tag/main-build">게임 다운로드 ↗</a><a class="button secondary" href="https://github.com/jhs512/stillbow">프로젝트 구경하기 ↗</a></div></section>
 </main>
 <footer>Stillbow · 짧은 요청이 실제 게임으로 이어진 제작 기록</footer>
@@ -92,6 +103,7 @@ document.querySelectorAll('.prompt button').forEach(button=>button.addEventListe
 </script>
 </body>
 </html>
+
 
 
 
