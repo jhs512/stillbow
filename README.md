@@ -27,7 +27,7 @@ Android를 고려한 540×900 세로 화면과 터치 입력을 구현했습니�
 
 `main`에 푸시할 때마다 `.github/workflows/build.yml`이 Godot 4.5.1과 같은 버전의 내보내기 템플릿으로 Android와 Windows를 빌드합니다. Actions 탭의 **Build Android and Windows**에서 **Run workflow**로 수동 실행할 수도 있습니다. 각 작업은 리소스 가져오기와 기존 전투 동작 검사를 먼저 수행합니다.
 
-완료된 실행의 **Artifacts**에서 다운로드하세요(로그인 필요, 보관 기간 14일).
+[최신 테스트 Release](https://github.com/jhs512/stillbow/releases/tag/main-build)의 **Assets**에서 APK와 Windows ZIP을 바로 받으세요. main 빌드 두 개가 모두 성공하면 이 Release가 자동 갱신됩니다. Actions Artifacts에도 14일 동안 보관합니다.
 
 - **Stillbow-windows-x86_64**: 아티팩트 ZIP 안의 게임 ZIP을 풀고 `Stillbow.exe`를 실행합니다. 게임 데이터가 EXE에 포함되어 별도 PCK가 필요 없습니다.
 - **Stillbow-android-debug**: ZIP을 풀고 `Stillbow-debug.apk`를 Android에 설치합니다. ARMv7/ARM64용이며 테스트 목적의 디버그 서명입니다. Play Store 제출용 AAB 또는 배포 서명은 만들지 않습니다.
@@ -43,3 +43,4 @@ Android를 고려한 540×900 세로 화면과 터치 입력을 구현했습니�
 Godot headless import로 스크립트 구문을 검사하고 `--headless --path . --script tests/smoke.gd`로 이동 시 사격 억제, 정지 사격, 적 피격, 무적, 강화, 승리/사망, 재시작, 드래그, 경계를 검사합니다.
 
 `--path . -- --capture`로 실제 렌더링 실행 시 100프레임 후 `artifacts/gameplay-art-v1.png`를 저장합니다. 캡처는 플레이 중인 Godot 뷰포트 이미지입니다. 최초 도형 버전 화면은 `artifacts/gameplay.png`에 보존되어 있습니다.
+

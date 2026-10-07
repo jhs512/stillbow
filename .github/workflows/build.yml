@@ -130,3 +130,34 @@ jobs:
           path: build/android/Stillbow-debug.apk
           if-no-files-found: error
           retention-days: 14
+
+  publish:
+    name: Publish downloadable release
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          merge-multiple: true
+      - name: Publish latest tested main build
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          BUILD_SHA: ${{ github.sha }}
+          BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s release-assets/Stillbow-debug.apk
+          test -s release-assets/Stillbow-windows-x86_64.zip
+          printf 'Android debug APK and Windows x86_64 build.\n\nCommit: %s\nVerified build: %s\n\nAndroid is for testing; a different build may require uninstalling the previous APK.\n' "$BUILD_SHA" "$BUILD_URL" > notes.md
+          if gh release view main-build >/dev/null 2>&1; then
+            gh api --method PATCH "repos/$GH_REPO/git/refs/tags/main-build" -f sha="$BUILD_SHA" -F force=true
+            gh release upload main-build release-assets/Stillbow-debug.apk release-assets/Stillbow-windows-x86_64.zip --clobber
+            gh release edit main-build --title 'Stillbow — latest test build' --notes-file notes.md --latest
+          else
+            gh release create main-build release-assets/Stillbow-debug.apk release-assets/Stillbow-windows-x86_64.zip --target "$BUILD_SHA" --title 'Stillbow — latest test build' --notes-file notes.md --latest
+          fi
