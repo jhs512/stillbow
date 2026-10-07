@@ -1,0 +1,129 @@
+name: Build Android and Windows
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GODOT_VERSION: 4.5.1
+
+jobs:
+  build:
+    name: ${{ matrix.target }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [Windows, Android]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install matching Godot editor and export templates
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
+          curl --fail --location --retry 3 "$base/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip" -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot-bin"
+          mv "$RUNNER_TEMP/godot-bin/Godot_v${GODOT_VERSION}-stable_linux.x86_64" "$RUNNER_TEMP/godot-bin/godot"
+          chmod +x "$RUNNER_TEMP/godot-bin/godot"
+          echo "$RUNNER_TEMP/godot-bin" >> "$GITHUB_PATH"
+          curl --fail --location --retry 3 "$base/Godot_v${GODOT_VERSION}-stable_export_templates.tpz" -o "$RUNNER_TEMP/templates.tpz"
+          unzip -q "$RUNNER_TEMP/templates.tpz" -d "$RUNNER_TEMP/templates"
+          mkdir -p "$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
+          mv "$RUNNER_TEMP/templates/templates/"* "$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable/"
+
+      - name: Import resources and check scripts
+        shell: bash
+        run: |
+          set -euo pipefail
+          godot --headless --path . --editor --quit 2>&1 | tee "$RUNNER_TEMP/import.log"
+          if grep -E 'SCRIPT ERROR:|ERROR:' "$RUNNER_TEMP/import.log"; then exit 1; fi
+
+      - name: Verify game behavior
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 120 godot --headless --path . --script tests/smoke.gd 2>&1 | tee "$RUNNER_TEMP/test.log"
+          if grep -E 'SCRIPT ERROR:|ERROR:' "$RUNNER_TEMP/test.log"; then exit 1; fi
+          grep -q '^PASS:' "$RUNNER_TEMP/test.log"
+
+      - name: Set up Java 17
+        if: matrix.target == 'Android'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        if: matrix.target == 'Android'
+        uses: android-actions/setup-android@v3
+
+      - name: Configure Android tools and ephemeral debug signing
+        if: matrix.target == 'Android'
+        shell: bash
+        run: |
+          set -euo pipefail
+          sdkmanager 'platform-tools' 'build-tools;35.0.0' 'platforms;android-35' 'cmdline-tools;latest' 'cmake;3.10.2.4988404' 'ndk;28.1.13356709'
+          keytool -genkeypair -keystore "$RUNNER_TEMP/debug.keystore" -storepass android -keypass android -alias androiddebugkey -dname 'CN=Android Debug,O=Android,C=US' -keyalg RSA -keysize 2048 -validity 10000
+          mkdir -p "$HOME/.config/godot"
+          cat > "$HOME/.config/godot/editor_settings-4.5.tres" <<EOF
+          [gd_resource type="EditorSettings" format=3]
+
+          [resource]
+          export/android/java_sdk_path = "$JAVA_HOME"
+          export/android/android_sdk_path = "$ANDROID_HOME"
+          EOF
+          echo "GODOT_ANDROID_KEYSTORE_DEBUG_PATH=$RUNNER_TEMP/debug.keystore" >> "$GITHUB_ENV"
+          echo 'GODOT_ANDROID_KEYSTORE_DEBUG_USER=androiddebugkey' >> "$GITHUB_ENV"
+          echo 'GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD=android' >> "$GITHUB_ENV"
+
+      - name: Export Windows x86_64
+        if: matrix.target == 'Windows'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/windows
+          godot --headless --path . --export-release 'Windows Desktop' build/windows/Stillbow.exe 2>&1 | tee "$RUNNER_TEMP/export.log"
+          if grep -E 'SCRIPT ERROR:|ERROR:' "$RUNNER_TEMP/export.log"; then exit 1; fi
+          test -s build/windows/Stillbow.exe
+          cd build/windows
+          zip -9 Stillbow-windows-x86_64.zip Stillbow.exe
+
+      - name: Export Android debug APK
+        if: matrix.target == 'Android'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/android
+          godot --headless --path . --export-debug Android build/android/Stillbow-debug.apk 2>&1 | tee "$RUNNER_TEMP/export.log"
+          if grep -E 'SCRIPT ERROR:|ERROR:' "$RUNNER_TEMP/export.log"; then exit 1; fi
+          test -s build/android/Stillbow-debug.apk
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify build/android/Stillbow-debug.apk
+
+      - name: Upload Windows build
+        if: matrix.target == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Stillbow-windows-x86_64
+          path: build/windows/Stillbow-windows-x86_64.zip
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload Android build
+        if: matrix.target == 'Android'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Stillbow-android-debug
+          path: build/android/Stillbow-debug.apk
+          if-no-files-found: error
+          retention-days: 14

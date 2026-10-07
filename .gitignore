@@ -1,0 +1,12 @@
+.godot/
+*.tmp
+build/
+dist/
+android/build/
+*.keystore
+*.jks
+.env
+.env.*
+*.apk
+*.aab
+*.pck
